@@ -94,17 +94,87 @@ class SortingRobot:
 
     def sort(self):
         """
-        Sort the robot's list.
+        While inefficient, I think going for a bubble sort-ish style would be the most practical to passing. 
+          compare/swap items until I reach the end
+          if item is swapped turn light on
+          return to the left and repeat (recursion???)
+          - If recursion what is the base case? 
+              - if light is off at the end of the function, return/pass?
+
+          How do I handle the None Value that will end up in the list?
+              - swap None with item immediately.
+              - move right and compare/swap the list item with the item carried until the end of the list
+              - once I reached the end, return to the left if item is None, move right once
         """
-        # Fill this out
-        pass
+
+        
+
+        # need to grab an item before we can even start comparing, should only fire on the first level of recursion
+        # print(self._list)
+        if self.light_is_on() == False:
+            self.swap_item()
+
+        # it is now a boolean for checking for swaps
+        self.set_light_off()
+
+        # comparing items while moving right, picking up the greatest value
+        while self.can_move_right() == True:
+            self.move_right()
+            if self.compare_item() == -1:
+                self.swap_item()
+                self.set_light_on()
+        # Need to check the final position outside of the while loop for a swap
+        # if self.can_move_right() == False:
+        #     self.swap_item()
+            # if self.compare_item() == -1:
+            #     self.swap_item()
+            #     self.set_light_on()
+            # else:
+            #     while self.can_move_left() == True:
+            #         if self.compare_item() == 1:
+            #             self.swap_item()
+            #             self.move_left()
+            #         else:
+            #             break
+        
+        # check to see if swaps occured 
+        # If the list is ready for the final pass, the light should be off at this point
+        # It is essentially the base case, as after the final pass I will return something, breaking the recursion loop
+        if self.light_is_on() == False:
+            # move to the end of the list, the robot should be carrying the highest value
+            # swap all the way down the left side so the robot is holding the None value at the end and break the recursion.
+            while self.can_move_right():
+                self.move_right()
+            self.swap_item()
+            while self.can_move_left() == True:
+                self.move_left()
+                self.swap_item()
+                
+            return "Sorting Complete!"
+
+        # move back to the left, but not over the none position
+        while self.can_move_left() == True:
+            self.move_left()
+            # if self.compare_item() == None:
+            #     self.move_right()
+        # RECURSION TO REPEAT THE PROCESS
+        print(self._list)
+        print(self._light)
+        print(self._item)
+        self.sort()
+
+        
+
+
 
 
 if __name__ == "__main__":
     # Test our your implementation from the command line
     # with `python robot_sort.py`
 
-    l = [15, 41, 58, 49, 26, 4, 28, 8, 61, 60, 65, 21, 78, 14, 35, 90, 54, 5, 0, 87, 82, 96, 43, 92, 62, 97, 69, 94, 99, 93, 76, 47, 2, 88, 51, 40, 95, 6, 23, 81, 30, 19, 25, 91, 18, 68, 71, 9, 66, 1, 45, 33, 3, 72, 16, 85, 27, 59, 64, 39, 32, 24, 38, 84, 44, 80, 11, 73, 42, 20, 10, 29, 22, 98, 17, 48, 52, 67, 53, 74, 77, 37, 63, 31, 7, 75, 36, 89, 70, 34, 79, 83, 13, 57, 86, 12, 56, 50, 55, 46]
+    # l = [15, 41, 58, 49, 26, 4, 28, 8, 61, 60, 65, 21, 78, 14, 35, 90, 54, 5, 0, 87, 82, 96, 43, 92, 62, 97, 69, 94, 99, 93, 76, 47, 2, 88, 51, 40, 95, 6, 23, 81, 30, 19, 25, 91, 18, 68, 71, 9, 66, 1, 45, 33, 3, 72, 16, 85, 27, 59, 64, 39, 32, 24, 38, 84, 44, 80, 11, 73, 42, 20, 10, 29, 22, 98, 17, 48, 52, 67, 53, 74, 77, 37, 63, 31, 7, 75, 36, 89, 70, 34, 79, 83, 13, 57, 86, 12, 56, 50, 55, 46]
+
+    l = [6, 2, 7, 5, 9, 4]
 
     robot = SortingRobot(l)
 
